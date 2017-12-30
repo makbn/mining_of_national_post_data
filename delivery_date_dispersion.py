@@ -84,10 +84,30 @@ if __name__ == '__main__':
     print(DATE_END)
 
     logger.info('Plotting...')
-    plt.subplots_adjust(left=0.2)
-    ax = plt.gca()
     formatter = FuncFormatter(days2date)
+    fig, plts = plt.subplots(1, 2)
+
+
+
+    '''
+    wspace # the amount of width reserved for blank space between subplots
+    '''
+    plt.subplots_adjust(left=0.2, wspace=2,top=0.8)
+    plt.suptitle('Parcel\'s Delivery Date Dispersion Box Plot', fontsize=16)
+
+    ax = plt.gca()
     ax.yaxis.set_major_formatter(formatter)
-    plt.boxplot(dates_day)
-    plt.ylim(17300, 17450)
+
+    plts[0].boxplot(dates_day, notch=1)
+    plts[0].set_title('Clean')
+    plts[0].set_ylim(17300, 17450)
+    plts[0].yaxis.set_major_formatter(formatter)
+    plts[0].set_ylabel('Persian Date')
+
+    plts[1].boxplot(dates_day)
+    plts[1].set_title('!Clean')
+    plts[1].yaxis.set_major_formatter(formatter)
+
+
     plt.show()
+    plt.savefig('date.eps', format='eps', dpi=600)
