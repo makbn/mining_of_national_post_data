@@ -108,6 +108,4 @@ if __name__ == '__main__':
     plts[1].set_title('!Clean')
     plts[1].yaxis.set_major_formatter(formatter)
 
-
-    plt.show()
     plt.savefig('date.eps', format='eps', dpi=600)
