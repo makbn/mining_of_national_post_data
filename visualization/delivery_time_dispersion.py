@@ -7,7 +7,7 @@ from os.path import join, isfile
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-import Conv
+from utils import jalali
 
 logger = logging.getLogger(__name__)
 

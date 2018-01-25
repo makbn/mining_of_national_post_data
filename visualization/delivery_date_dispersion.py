@@ -7,7 +7,7 @@ from os.path import join, isfile
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-import Conv
+from utils import jalali
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ def days2date(x, pos):
     :return: returns Persian date in 'YYYY/MM/DD' format
     """
     # The two args are the value and tick position
-    return Conv.Gregorian((datetime.datetime(1970, 1, 1) + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) \
+    return jalali.Gregorian((datetime.datetime(1970, 1, 1) + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) \
         .persian_string('{:04d}/{:02d}/{:02d}')
 
 if __name__ == '__main__':
@@ -48,11 +48,11 @@ if __name__ == '__main__':
             for row in csv_reader:
                 if index % 50 == 0:
                     dates_string.append(row[7])
-                    dates_day.append((Conv.Persian(row[7]).gregorian_datetime() - datetime.datetime(1970, 1, 1)).days)
+                    dates_day.append((jalali.Persian(row[7]).gregorian_datetime() - datetime.datetime(1970, 1, 1)).days)
                 index += 1
             for i in range(len(dates_day)):
                 days = dates_day[i]
-                date1 = Conv.Gregorian((datetime.datetime(1970, 1, 1) + datetime.timedelta(days=days))
+                date1 = jalali.Gregorian((datetime.datetime(1970, 1, 1) + datetime.timedelta(days=days))
                                        .strftime('%Y-%m-%d')).persian_string('{:04d}/{:02d}/{:02d}')
                 date2 = dates_string[i]
                 assert date1 == date2
