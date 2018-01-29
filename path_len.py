@@ -11,7 +11,10 @@ class path_len:
         data_path = 'data'
         exchange_in_path = join(data_path, 'exchange_in.csv')
         exchange_out_path = join(data_path, 'exchange_out.csv')
+        # key= parcel_code & value = exchanges sorted list for this parcel
         self.exchanges = {}
+        # key= parcel_code & value = length(km)
+        self.len = {}
 
         self.exchange_in_csv = pd.read_csv(exchange_in_path)
         self.exchange_out_csv = pd.read_csv(exchange_out_path)
@@ -24,14 +27,16 @@ class path_len:
         else:
             logger.info('Computing data')
 
+            # read from exchange_in file
             for index, row in self.exchange_in_csv.iterrows():
                 if row[0] in self.exchanges.keys():
-                    self.exchanges.get(row[0], []).append(row)
+                    self.exchanges[row[0]].append(row.append([1]))
                 else:
-                    row_array = [row]
+                    row_array = [row.append([1])]
                     self.exchanges[row[0]] = row_array
             logger.info('exchange_in data read completely!')
 
+            # read from exchange_out file
             for index, row in self.exchange_out_csv.iterrows():
                 if row[0] in self.exchanges.keys():
                     self.exchanges.get(row[0], []).append(row)
@@ -49,6 +54,7 @@ class path_len:
                 pickle.dump(self.exchanges, exchanges_file)
             logger.info('exchanges data saved on exchanges.pkl!')
 
+
     def get_path_len(self, parcel_code):
         assert parcel_code in self.exchanges.keys(), "parcel coed is invalid!"
 
@@ -59,4 +65,3 @@ if __name__ == '__main__':
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.DEBUG)
 
-    a = path_len()
