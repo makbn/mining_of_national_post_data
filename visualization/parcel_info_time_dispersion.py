@@ -53,40 +53,39 @@ def string2time(str):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='../logs/delivery_time_dispersion.log',
+    logging.basicConfig(filename='../logs/parcel_info_time_dispersion.log',
                         filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.DEBUG)
 
     data_path = '../data'
     parcel_info_path = join(data_path, 'parcel_info.csv')
-    delivery_path = join(data_path, 'delivery.csv')
 
     times_string = []
     time_sec = []
     times = []
-    dates_path = join(data_path, 'times.pkl')
-    if isfile(dates_path):
+    time_path = join(data_path, 'parcel_info_times.pkl')
+    if isfile(time_path):
         logger.info('Loading from file...')
-        with open(dates_path, 'rb') as dates_file:
-            times_string, time_sec = pickle.load(dates_file)
+        with open(time_path, 'rb') as time_file:
+            times_string, time_sec = pickle.load(time_file)
     else:
         logger.info('Computing data')
-        with open(delivery_path) as csv_file:
+        with open(parcel_info_path) as csv_file:
             csv_reader = csv.reader(csv_file)
             start_time = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
             index = 0
             for row in csv_reader:
-                if index % 50 == 0:
-                    times_string.append(row[8])
-                    time = (string2time(row[8]))
-                    times.append(time)
-                    time_sec.append((time - start_time).total_seconds())
+                times_string.append(row[4])
+                time = (string2time(row[4]))
+                times.append(time)
+                time_sec.append((time - start_time).total_seconds())
                 index += 1
-            with open(dates_path, 'wb') as dates_file:
-                pickle.dump((times_string, time_sec), dates_file)
+            with open(time_path, 'wb') as time_file:
+                pickle.dump((times_string, time_sec), time_file)
             logger.info('Saving to file...')
     logger.info('Data is ready.')
+
 
     times_string.sort()
     size = len(times_string)
@@ -125,7 +124,7 @@ if __name__ == '__main__':
 
 
     plts[0].boxplot(time_sec, notch=1)
-    #plts[0].set_title('Clean')
+   # plts[0].set_title('Clean')
     plts[0].set_ylim(9*3600, 15*3600)
     plts[0].yaxis.set_major_formatter(formatter)
     plts[0].set_ylabel('Time')
@@ -134,4 +133,4 @@ if __name__ == '__main__':
     #plts[1].set_title('Not Clean')
     plts[1].yaxis.set_major_formatter(formatter)
 
-    plt.savefig('output/Delivery_Time_Dispersion_Box_Plot.png', format='png', dpi=600)
+    plt.savefig('output/parcel_info_receipt_Time_Dispersion_Box_Plot.png', format='png', dpi=600)

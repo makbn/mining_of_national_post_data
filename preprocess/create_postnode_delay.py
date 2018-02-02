@@ -9,7 +9,7 @@ def create_postnode_delay(exchange_list):
     last_postnode = -1
     postnode_time_deltas = {}
     start_datetime = None
-    state = -1;
+    state = -1
 
     for item in exchange_list:
         if item[2] == 1:
@@ -49,10 +49,11 @@ if __name__ == '__main__':
         with open(postnode_delay_data, 'rb') as postnode_delay_file:
             postnode_timedelta = pickle.load(postnode_delay_file)
             for key, value in postnode_timedelta.items():
-                print("Postnode ID:" + str(key))
-                print("Min: " + str(value[0][3]) + " Max: " + str(value[-1][3]) + " Holidays: " + str(value[-1][2]))
+                if len(value) != 0:
+                    print("Postnode ID:" + str(key))
+                    print("Min: " + str(value[0][3]) + " Max: " + str(value[-1][3]) + " Holidays: " + str(value[-1][2]))
 
-    if isfile(working_data):
+    elif isfile(working_data):
         with open(working_data, 'rb') as data_file:
             parcel_exchange = pickle.load(data_file)
 
@@ -60,10 +61,12 @@ if __name__ == '__main__':
         for parcel in parcel_exchange.keys():
             postnodes = postnodes.union(set(row[0] for row in parcel_exchange[parcel]))
         postnode_timedelta = {postnode: list() for postnode in postnodes}
-
+        count = 0
         for parcel_code in parcel_exchange.keys():
             exchange_list = parcel_exchange.get(parcel_code)
             postnode_time_delta_list = create_postnode_delay(exchange_list)
+            print(str(count+1))
+            count += 1
             for key, value in postnode_time_delta_list.items():
                 postnode_timedelta.get(key).extend(value)
 
