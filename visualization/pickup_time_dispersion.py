@@ -65,7 +65,7 @@ if __name__ == '__main__':
     times_string = []
     time_sec = []
     times = []
-    dates_path = join(data_path, 'times.pkl')
+    dates_path = join(data_path, 'pickup_times.pkl')
     if isfile(dates_path):
         logger.info('Loading from file...')
         with open(dates_path, 'rb') as dates_file:
@@ -77,11 +77,10 @@ if __name__ == '__main__':
             start_time = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
             index = 0
             for row in csv_reader:
-                if index % 50 == 0:
-                    times_string.append(row[8])
-                    time = (string2time(row[8]))
-                    times.append(time)
-                    time_sec.append((time - start_time).total_seconds())
+                times_string.append(row[6])
+                time = (string2time(row[6]))
+                times.append(time)
+                time_sec.append((time - start_time).total_seconds())
                 index += 1
             with open(dates_path, 'wb') as dates_file:
                 pickle.dump((times_string, time_sec), dates_file)
@@ -126,7 +125,7 @@ if __name__ == '__main__':
 
     plts[0].boxplot(time_sec, notch=1)
     #plts[0].set_title('Clean')
-    plts[0].set_ylim(9*3600, 15*3600)
+    plts[0].set_ylim(6*3600, 12*3600)
     plts[0].yaxis.set_major_formatter(formatter)
     plts[0].set_ylabel('Time')
 
@@ -134,4 +133,4 @@ if __name__ == '__main__':
     #plts[1].set_title('Not Clean')
     plts[1].yaxis.set_major_formatter(formatter)
 
-    plt.savefig('output/Delivery_Time_Dispersion_Box_Plot.png', format='png', dpi=600)
+    plt.savefig('output/pickup_Time_Dispersion_Box_Plot.png', format='png', dpi=600)

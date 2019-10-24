@@ -24,31 +24,30 @@ def days2date(x, pos):
         .persian_string('{:04d}/{:02d}/{:02d}')
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='../logs/example1.log',
+    logging.basicConfig(filename='../logs/parcel_info_date_dispersion.log',
                         filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.DEBUG)
 
     data_path = '../data'
     parcel_info_path = join(data_path, 'parcel_info.csv')
-    delivery_path = join(data_path, 'delivery.csv')
+
 
     dates_string = []
     dates_day = []
-    dates_path = join(data_path, 'dates.pkl')
+    dates_path = join(data_path, 'parcel_info_dates.pkl')
     if isfile(dates_path):
         logger.info('Loading from file...')
         with open(dates_path, 'rb') as dates_file:
             dates_string, dates_day = pickle.load(dates_file)
     else:
         logger.info('Computing data')
-        with open(delivery_path) as csv_file:
+        with open(parcel_info_path) as csv_file:
             csv_reader = csv.reader(csv_file)
             index = 0
             for row in csv_reader:
-                if index % 50 == 0:
-                    dates_string.append(row[7])
-                    dates_day.append((jalali.Persian(row[7]).gregorian_datetime() - datetime.datetime(1970, 1, 1)).days)
+                dates_string.append(row[3])
+                dates_day.append((jalali.Persian(row[3]).gregorian_datetime() - datetime.datetime(1970, 1, 1).date()).days)
                 index += 1
             for i in range(len(dates_day)):
                 days = dates_day[i]
@@ -108,4 +107,4 @@ if __name__ == '__main__':
     #plts[1].set_title('Not Clean')
     plts[1].yaxis.set_major_formatter(formatter)
 
-    plt.savefig('output/Delivery_Date_Dispersion_Box_Plot.png', format='png', dpi=600)
+    plt.savefig('output/parcel_info_receipt_Date_Dispersion_Box_Plot.png', format='png', dpi=600)

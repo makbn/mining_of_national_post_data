@@ -9,13 +9,17 @@ from utils import jalali
 
 logger = logging.getLogger(__name__)
 
+def get_holiday_count_datetime(start_datetime,end_datetime):
+    start = jalali.Gregorian(start_datetime).persian_string()
+    end = jalali.Gregorian(end_datetime).persian_string()
+    return get_holiday_count(start, end)
 
-def get_workday_count(start_date, end_date):
+def get_holiday_count(start_date, end_date):
     """
     Returns the number of workdays in the given period
     :param start_date:
     :param end_date:
-    :return: number of workdays
+    :return: number of holiday
     """
     g_start = jalali.Persian(start_date).gregorian_datetime()
     g_end = jalali.Persian(end_date).gregorian_datetime()
@@ -51,7 +55,7 @@ def get_workday_count(start_date, end_date):
     if 'Friday' in week:
         fridays = week['Friday']
         # print("Friday:" + str(week['Friday']))
-    return (g_end - g_start).days + 1 - (holiday_count + fridays)
+    return holiday_count + fridays
 
 
 if __name__ == '__main__':
@@ -59,4 +63,9 @@ if __name__ == '__main__':
                         filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.DEBUG)
-    print(get_workday_count("1396/11/21", "1396/11/22"))
+    print(get_holiday_count("1396/11/21", "1396/11/22"))
+
+    g_start = jalali.Persian("1396/11/21").gregorian_datetime()
+    g_end = jalali.Persian("1396/11/22").gregorian_datetime()
+    print(get_holiday_count_datetime(g_start,g_end))
+
